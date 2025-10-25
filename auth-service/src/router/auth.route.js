@@ -8,13 +8,13 @@ import { generateUserToken } from '../utils/token.util.js'
 const router = express.Router()
 
 router.post('/v1/register', async (req, res) => {
-    const { name, password, email } = req.body
+    const { name, password, email } = req.body    
     try {
         const existinguser = await ExistingUser(email)
         if (existinguser) {
             errorResponse(res, 401, 'user already exist')
         }
-        const hashedPassword = HashPassword(password)
+        const hashedPassword = await HashPassword(password)
         await AuthService.register({ name, email, hashedPassword })
         successResponse(res, 201, 'user created successfully')
     } catch (error) {
