@@ -31,18 +31,29 @@ router.post('/v1/login', async (req, res) => {
             errorResponse(res, 401, 'Invalid credential')
         }
 
-        const isMatch =  await AuthService.login({password,existinguser})
+        const isMatch = await AuthService.login({ password, existinguser })
 
         if (!isMatch) {
             errorResponse(res, 401, 'Invalid credentail')
         }
-        const token =  generateUserToken()
+        const token = generateUserToken(existinguser?.id)
 
-        successResponse(res,200,{existinguser,token})
-
+        successResponse(res, 200, { user: existinguser, token })
 
     } catch (error) {
         console.log(error);
         errorResponse(res, 500, error.message)
     }
 })
+
+router.post('/v1/logout', async (req, res) => {
+    try {
+        const message = await AuthService.logout()
+        successResponse(res, 201, message.message)
+    } catch (error) {
+        errorResponse(res, 500, error.message)
+    }
+})
+
+
+export default router

@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
-import { HashPassword, passwordCheck } from "../utils/password.util.js";
+import { HashPassword } from "../utils/password.util.js"
+import { passwordCheck } from "../utils/user.util.js";
 
 
 const userSchema = new mongoose.Schema({
