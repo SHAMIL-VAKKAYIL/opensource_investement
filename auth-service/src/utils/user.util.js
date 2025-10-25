@@ -5,5 +5,5 @@ export const ExistingUser = async (email) => {
 }
 
 export const passwordCheck =async(password,existinguser)=>{
-    await existinguser.isPasswordMatch(password)
+   return await existinguser.isPasswordMatch(password)
 } 

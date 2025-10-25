@@ -7,12 +7,12 @@ class AuthService {
       const  newUser = await User.create({
             name: data.name,
             email: data.email,
-            password: data.hashedPassword
+            password: data.password
         })
         return newUser
     }
     async login(data) {
-        return passwordCheck(data.password, data.existinguser)
+        return await passwordCheck(data.password, data.existinguser)
     }
     async tokenVerify(token) {
         const decode = verifyToken(token)

@@ -1,25 +1,25 @@
 import mongoose from "mongoose";
 import { HashPassword } from "../utils/password.util.js"
-import { passwordCheck } from "../utils/user.util.js";
+import bcrypt from "bcryptjs";
 
 
 const userSchema = new mongoose.Schema({
     name: { type: String },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true }
-},{
-    timestamps:true,
-    toJSON:{
-        virtuals:true,
-        versionKey:false,
-        transform:(doc,ret)=>{
+}, {
+    timestamps: true,
+    toJSON: {
+        virtuals: true,
+        versionKey: false,
+        transform: (doc, ret) => {
             delete ret.password
         }
     },
-    toObject:{
-        virtuals:true,
-        versionKey:false,
-        transform:(doc,ret)=>{
+    toObject: {
+        virtuals: true,
+        versionKey: false,
+        transform: (doc, ret) => {
             delete ret.password
         }
     }
@@ -30,8 +30,9 @@ userSchema.pre('save', async function () {
     this.password = await HashPassword(this.password)
 })
 
-userSchema.methods.isPasswordMatch=async function(Enteredpassword){
-    return await passwordCheck(Enteredpassword,this.password)
+userSchema.methods.isPasswordMatch = async function (Enteredpassword) {
+    const isMatch = await bcrypt.compare(Enteredpassword, this.password);
+    return isMatch;
 }
 
 const User = mongoose.model('User', userSchema)

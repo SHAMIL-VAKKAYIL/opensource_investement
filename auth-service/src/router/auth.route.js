@@ -8,18 +8,17 @@ import { generateUserToken } from '../utils/token.util.js'
 const router = express.Router()
 
 router.post('/v1/register', async (req, res) => {
-    const { name, password, email } = req.body    
+    const { name, password, email } = req.body
     try {
         const existinguser = await ExistingUser(email)
         if (existinguser) {
-            errorResponse(res, 401, 'user already exist')
+            return errorResponse(res, 401, 'user already exist')
         }
-        const hashedPassword = await HashPassword(password)
-        await AuthService.register({ name, email, hashedPassword })
-        successResponse(res, 201, 'user created successfully')
+        await AuthService.register({ name, email, password })
+        return successResponse(res, 201, 'user created successfully')
     } catch (error) {
         console.log(error);
-        errorResponse(res, 500, error.message)
+        return errorResponse(res, 500, error.message)
     }
 })
 
@@ -28,30 +27,31 @@ router.post('/v1/login', async (req, res) => {
     try {
         const existinguser = await ExistingUser(email)
         if (!existinguser) {
-            errorResponse(res, 401, 'Invalid credential')
+            return errorResponse(res, 401, 'Invalid credential')
         }
 
         const isMatch = await AuthService.login({ password, existinguser })
-
+            console.log(isMatch,'sjkdfk');
+            
         if (!isMatch) {
-            errorResponse(res, 401, 'Invalid credentail')
+            return errorResponse(res, 401, 'Invalid credentail')
         }
         const token = generateUserToken(existinguser?.id)
 
-        successResponse(res, 200, { user: existinguser, token })
+        return successResponse(res, 200, { user: existinguser, token,message:'user Logged successfully' })
 
     } catch (error) {
         console.log(error);
-        errorResponse(res, 500, error.message)
+        return errorResponse(res, 500, error.message)
     }
 })
 
 router.post('/v1/logout', async (req, res) => {
     try {
         const message = await AuthService.logout()
-        successResponse(res, 201, message.message)
+        return successResponse(res, 201, message.message)
     } catch (error) {
-        errorResponse(res, 500, error.message)
+        return errorResponse(res, 500, error.message)
     }
 })
 
