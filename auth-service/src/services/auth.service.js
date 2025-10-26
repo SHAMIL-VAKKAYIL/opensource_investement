@@ -5,9 +5,9 @@ import { passwordCheck } from "../utils/user.util.js";
 class AuthService {
     async register(data) {
       const  newUser = await User.create({
-            name: data.name,
             email: data.email,
-            password: data.password
+            password: data.password,
+            role:data.role
         })
         return newUser
     }

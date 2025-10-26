@@ -4,17 +4,20 @@ import { ExistingUser, passwordCheck } from '../utils/user.util.js'
 import { HashPassword } from '../utils/password.util.js'
 import AuthService from '../services/auth.service.js'
 import { generateUserToken } from '../utils/token.util.js'
+import { sendUserCreatedMessage } from '../kafka/producer.js'
 
 const router = express.Router()
 
 router.post('/v1/register', async (req, res) => {
-    const { name, password, email } = req.body
+    const { password, email, role } = req.body
     try {
         const existinguser = await ExistingUser(email)
         if (existinguser) {
             return errorResponse(res, 401, 'user already exist')
         }
-        await AuthService.register({ name, email, password })
+        const user = await AuthService.register({ email, password, role })
+        await sendUserCreatedMessage(user._id)
+
         return successResponse(res, 201, 'user created successfully')
     } catch (error) {
         console.log(error);
@@ -31,14 +34,14 @@ router.post('/v1/login', async (req, res) => {
         }
 
         const isMatch = await AuthService.login({ password, existinguser })
-            console.log(isMatch,'sjkdfk');
-            
+        console.log(isMatch, 'sjkdfk');
+
         if (!isMatch) {
             return errorResponse(res, 401, 'Invalid credentail')
         }
-        const token = generateUserToken(existinguser?.id)
+        const token = generateUserToken(existinguser?._id)
 
-        return successResponse(res, 200, { user: existinguser, token,message:'user Logged successfully' })
+        return successResponse(res, 200, { user: existinguser, token, message: 'user Logged successfully' })
 
     } catch (error) {
         console.log(error);
