@@ -1,9 +1,9 @@
-import UserDetails from "../model/UserDetail";
+import UserDetails from "../model/UserDetail.js";
 
 
 class UserSerivce {
 
-    async createUser(data) {
+    async createUser(data) {        
         const { userId } = data
         const createUser = await UserDetails.create({userId})
         return createUser
