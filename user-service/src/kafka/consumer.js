@@ -1,5 +1,6 @@
 import { Kafka } from 'kafkajs'
 import UserService from '../services/user.service.js'
+import { sendWalletCreationMessage } from './producer.js'
 
 
 const kafka = new Kafka({ brokers: ['localhost:9092'] })
@@ -14,8 +15,8 @@ export const userCreateEvent = async () => {
             const data = JSON.parse(message.value.toString())
             // console.log(data, 'from producer');
 
-            await UserService.createUser({ userId: data})
-            //! wallet event
+            await UserService.createUser({ userId: data })
+            await sendWalletCreationMessage({ userId: data })
 
         }
     })
