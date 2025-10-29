@@ -1,3 +1,4 @@
+import { emitWalletCreated } from "../kafka/producer.js";
 import Wallet from "../model/Wallet.js";
 
 class WalletService {
@@ -6,6 +7,7 @@ class WalletService {
         // console.log(data, 'skjgfskdjfhncas');
 
         const newWallet = await Wallet.create({ userId: data.userId })
+        await emitWalletCreated(newWallet)
         return newWallet
     }
 }
