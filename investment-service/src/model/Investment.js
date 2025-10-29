@@ -12,7 +12,7 @@ const investmentSchema = new mongoose.Schema({
 
     startDate: { type: Date, default: Date.now },
     endDate: { type: Date },
-    status: { type: String, enum: ["active", "completed", "cancelled"], default: "active" },
+    status: { type: String, enum: ["active", "completed", "cancelled","pending"], default: "pending" },
 }, {
     toJSON: {
         virtuals: true,
