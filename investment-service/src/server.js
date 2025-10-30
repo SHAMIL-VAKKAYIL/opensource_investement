@@ -3,6 +3,7 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import { connectDB } from './config/db.js'
 import investmentRouter from './routes/investment.route.js'
+import { walletCreateEmit } from './kafka/consumer.js'
 
 
 dotenv.config()
@@ -16,9 +17,11 @@ app.use('/api/investment', investmentRouter)
 
 const startServer = async () => {
     await connectDB()
-    app.listen(5001, () => {
-        console.log('server running on port 5001');
+    await walletCreateEmit()
+    app.listen(5002, () => {
+        console.log('server running on port 5002');
     })
 }
+
 
 startServer()
