@@ -34,7 +34,6 @@ router.post('/v1/login', async (req, res) => {
         }
 
         const isMatch = await AuthService.login({ password, existinguser })
-        console.log(isMatch, 'sjkdfk');
 
         if (!isMatch) {
             return errorResponse(res, 401, 'Invalid credentail')

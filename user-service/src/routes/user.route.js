@@ -5,15 +5,6 @@ import { errorResponse, successResponse } from "../utils/response.util.js";
 const router = express.Router()
 
 
-// router.post('/v1/create',async(req,res)=>{
-//     try {
-        
-//     } catch (error) {
-//         console.log(error);
-//         return errorResponse(res, 500, error.message)
-//     }
-// })
-
 router.put('/v1/addData/:id', async (req, res) => {
     const { name, address, phone } = req.body
     const id = req.params
