@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken'
-import { errorResponse } from '../utils/response.util';
+import { errorResponse } from '../utils/response.util.js';
 
 
 export const verifyUser = async (req, res, next) => {
@@ -7,9 +7,10 @@ export const verifyUser = async (req, res, next) => {
     if (!token) {
         return errorResponse(res, 401, 'No token')
     }
+    
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.userId = decoded.userId;
+        req.userId = decoded.id;        
         next();
 
     } catch (error) {
