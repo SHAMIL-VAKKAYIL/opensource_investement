@@ -3,7 +3,7 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import { connectDB } from './config/db.js'
 import investmentRouter from './routes/investment.route.js'
-import { walletCreateEmit } from './kafka/consumer.js'
+import { walletCreateEmit } from './events/consumer.js'
 
 
 dotenv.config()

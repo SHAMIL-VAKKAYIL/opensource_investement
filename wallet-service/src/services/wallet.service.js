@@ -1,4 +1,4 @@
-import { emitWalletCreated } from "../kafka/producer.js";
+import { emitWalletCreated } from "../events/producer.js";
 import Transaction from "../model/Transaction.js";
 import Wallet from "../model/Wallet.js";
 

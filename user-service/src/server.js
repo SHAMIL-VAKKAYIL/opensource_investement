@@ -3,7 +3,7 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import { connectDB } from './config/db.js'
 import userRouter from './routes/user.route.js'
-import { userCreateEvent } from './kafka/consumer.js'
+import { userCreateEvent } from './events/consumer.js'
 
 
 dotenv.config()

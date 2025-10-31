@@ -4,7 +4,7 @@ import { ExistingUser, passwordCheck } from '../utils/user.util.js'
 import { HashPassword } from '../utils/password.util.js'
 import AuthService from '../services/auth.service.js'
 import { generateUserToken } from '../utils/token.util.js'
-import { sendUserCreatedMessage } from '../kafka/producer.js'
+import { sendUserCreatedMessage } from '../events/producer.js'
 
 const router = express.Router()
 

@@ -2,7 +2,7 @@ import express from 'express'
 import { errorResponse, successResponse } from '../utils/response.util.js';
 import InvestmentService from '../services/investment.service.js';
 import { verifyUser } from '../middleware/verifyUser.js';
-import { InvestmentCreatedMessage } from '../kafka/producer.js';
+import { InvestmentCreatedMessage } from '../events/producer.js';
 
 const router = express.Router()
 

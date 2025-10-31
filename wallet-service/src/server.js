@@ -2,7 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import { connectDB } from './config/db.js'
-import { InvestmentCreatedEvent, walletCreatedEvent } from './kafka/consumer.js'
+import { InvestmentCreatedEvent, walletCreatedEvent } from './events/consumer.js'
 import walletRouter from './routes/wallet.route.js'
 
 
