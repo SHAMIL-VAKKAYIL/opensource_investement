@@ -25,7 +25,7 @@ export const InvestmentCreatedEvent = async () => {
 
     await consumer.run({
         eachMessage: async ({ message }) => {
-            const data = JSON.parse(message.value.toString())            
+            const data = JSON.parse(message.value.toString())
             await WalletService.newTransaction(data)
         }
     })
@@ -33,3 +33,16 @@ export const InvestmentCreatedEvent = async () => {
 }
 
 
+export const returnGenarationEvent = async () => {
+    const consumer = kafka.consumer({ groupId: 'retrun-generated-event' })
+
+    await consumer.connect()
+    await consumer.subscribe({topic:'retrun_emiter'})
+
+    await consumer.run({
+        eachMessage:async({message,partition,topic})=>{
+            const data = JSON.parse(message.value.toString())
+            
+        }
+    })
+}
