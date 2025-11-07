@@ -10,19 +10,19 @@ router.put('/v1/addData/:id', async (req, res) => {
     const id = req.params
 
     try {
-        let addUserData ={}
+        let addUserData = {}
 
-        if(name){
-            addUserData.name=name
+        if (name) {
+            addUserData.name = name
         }
-        if(address){
-            addUserData.address=address
+        if (address) {
+            addUserData.address = address
         }
-        if(phone){
-            addUserData.phone=phone
+        if (phone) {
+            addUserData.phone = phone
         }
 
-        const addedUser = await UserService.addingUserData({addUserData,userId:id})
+        const addedUser = await UserService.addingUserData({ addUserData, userId: id })
         return successResponse(res, 201, { addedUser, message: 'succefully add user data ' })
 
     } catch (error) {
@@ -59,6 +59,17 @@ router.put('/v1/update/:id', async (req, res) => {
     }
 })
 
+
+router.get('/v1/getusers', async (req, res) => {
+    try {
+        const userDatas = await UserService.getUsers()
+        return successResponse(res, 201, userDatas)
+
+    } catch (error) {
+        console.log(error);
+        return errorResponse(res, 500, error.message)
+    }
+})
 
 
 export default router
