@@ -33,6 +33,12 @@ class InvestmentServices {
 
         return newInvestment
     }
+
+    async activeInvestments() {
+        const activeInvestmentData = Investment.find({ status: 'active' })
+        
+        return activeInvestmentData
+    }
 }
 
 export default new InvestmentServices
