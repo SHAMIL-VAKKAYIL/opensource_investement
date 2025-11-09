@@ -38,7 +38,6 @@ export const returnGenarationEvent = async () => {
 
     await consumer.connect()
     await consumer.subscribe({topic:'retrun_emiter'})
-
     await consumer.run({
         eachMessage:async({message,partition,topic})=>{
             const data = JSON.parse(message.value.toString())
