@@ -4,7 +4,7 @@ import { userData } from '../events/consumer.js';
 
 
 export const startReturnJob =() => {
-    cron.schedule("*/30 * * * * *", async () => {
+    cron.schedule("0 0 1 * *", async () => {
         console.log(' retrun generating');
 
         await ReturnService.returnGenaration()
