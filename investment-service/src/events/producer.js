@@ -1,6 +1,6 @@
 import { Kafka } from 'kafkajs'
 
-const kafka = new Kafka({ brokers: ['localhost:9092'] })
+const kafka = new Kafka({ brokers: ['localhost:9092']})
 
 const producer = kafka.producer()
 
@@ -11,3 +11,17 @@ export const InvestmentCreatedMessage = async (data) => {
         messages: [{ value: JSON.stringify(data) }]
     })
 }   
+
+
+export const withdrawalEvent = async (data) => {
+    await producer.connect()
+    await producer.send({
+        topic: 'notifications',
+        messages: [
+            {
+                key: 'withdrawal.completed',
+                value: JSON.stringify(data)
+            }
+        ]
+    })
+}

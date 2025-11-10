@@ -2,7 +2,7 @@ import express from 'express'
 import { errorResponse, successResponse } from '../utils/response.util.js';
 import InvestmentService from '../services/investment.service.js';
 import { verifyUser } from '../middleware/verifyUser.js';
-import { InvestmentCreatedMessage } from '../events/producer.js';
+import { InvestmentCreatedMessage, withdrawalEvent } from '../events/producer.js';
 
 const router = express.Router()
 
@@ -16,6 +16,8 @@ router.post('/v1/newInvestment', verifyUser, async (req, res) => {
         }
         const investment = await InvestmentService.createInvestment({ userId, amount, planType, expectedReturn, durationDays })
         await InvestmentCreatedMessage({ userId, amount: investment.amount })
+        await withdrawalEvent({ userId, message: `successfully invested the ${amount}`, type: 'investment' })
+
         return successResponse(res, 201, 'created investment')
 
     } catch (error) {
