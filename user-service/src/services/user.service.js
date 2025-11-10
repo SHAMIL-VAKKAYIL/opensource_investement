@@ -14,13 +14,21 @@ class UserSerivce {
         return addData
     }
     async updateUser(data) {
+        
         const { updateUser, userId } = data
-        const updatedUser = await UserDetails.updateOne({ userId }, { $set: { ...updateUser } }, { new: true })
+        const id =userId.id
+
+        
+        const updatedUser = await UserDetails.updateOne({ userId:id }, { $set: { ...updateUser } }, { new: true })
         return updatedUser
     }
     async getUsers(){
         const users = await UserDetails.find()
         return users
+    }
+    async getUser(id){
+        const user = await UserDetails.findOne({userId:id})
+        return user
     }
 }
 

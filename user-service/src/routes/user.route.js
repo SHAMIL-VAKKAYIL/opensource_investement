@@ -32,8 +32,12 @@ router.put('/v1/addData/:id', async (req, res) => {
 })
 
 router.put('/v1/update/:id', async (req, res) => {
-    const { name, address } = req.body
-    const id = req.params
+    const { name, address, bankDetails } = req.body
+    const id = { id: req.params.id }
+
+    // console.log(id);
+    // console.log(bankDetails);
+
     try {
         let updateUser = {}
 
@@ -43,6 +47,10 @@ router.put('/v1/update/:id', async (req, res) => {
 
         if (address) {
             updateUser.address = address
+        }
+
+        if (bankDetails) {
+            updateUser.bankDetails = bankDetails
         }
 
         const userData = await UserService.updateUser({ updateUser, userId: id })
@@ -64,6 +72,18 @@ router.get('/v1/getusers', async (req, res) => {
     try {
         const userDatas = await UserService.getUsers()
         return successResponse(res, 201, userDatas)
+
+    } catch (error) {
+        console.log(error);
+        return errorResponse(res, 500, error.message)
+    }
+})
+router.get('/v1/user/:id', async (req, res) => {
+
+    const { id } = req.params
+    try {
+        const userData = await UserService.getUser(id)
+        return successResponse(res, 201, userData)
 
     } catch (error) {
         console.log(error);
