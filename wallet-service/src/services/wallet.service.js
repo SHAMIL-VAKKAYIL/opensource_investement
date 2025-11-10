@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 import { emitWalletCreated } from "../events/producer.js";
 import Transaction from "../model/Transaction.js";
 import Wallet from "../model/Wallet.js";
@@ -39,6 +41,8 @@ class WalletService {
     }
     async createWithdrawal(data) {
         const { userId, amount } = data
+        const { data: userData } = await axios.get(`http://localhost:5001/api/user/v1/user/${userId}`)
+        console.log(userData);
 
         const walletData = await Wallet.findOne({ userId })
         if (!walletData) throw new Error('Wallet not found');
@@ -52,7 +56,7 @@ class WalletService {
             userId,
             amount,
             status,
-            bankDetails,
+            bankDetails: userData.bankDetails,
             createdAt: new Date(),
             updatedAt: new Date()
         })

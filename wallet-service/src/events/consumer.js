@@ -17,7 +17,6 @@ export const walletCreatedEvent = async () => {
 }
 
 
-
 export const InvestmentCreatedEvent = async () => {
     const consumer = kafka.consumer({ groupId: 'Investment-create-event' })
     await consumer.connect()

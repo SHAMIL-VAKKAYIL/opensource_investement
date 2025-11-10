@@ -11,3 +11,16 @@ export const emitWalletCreated = async (data) => {
     })
     await producer.disconnect()
 }
+
+export const withdrawalEvent = async (data) => {
+    await producer.connect()
+    await producer.send({
+        topic: 'notifications',
+        messages: [
+            {
+                key: 'withdrawal.completed',
+                value: JSON.stringify(data)
+            }
+        ]
+    })
+}
