@@ -1,9 +1,9 @@
 import stripe from "../config/stripe.js"
-import { paymentSuccessfullEvent } from "../events/producer.js"
+import { PaymentEvent, paymentSuccessfullEvent } from "../events/producer.js"
 
 class PaymentService {
 
-    async handleWebHook({req}) {
+    async handleWebHook({ req }) {
 
         const sig = req.headers['stripe-signature']
 
@@ -17,12 +17,12 @@ class PaymentService {
 
         } catch (err) {
             console.error('Webhook signature failed:', err.message)
-            throw new Error('Webhook signature failed',err.message) 
+            throw new Error('Webhook signature failed', err.message)
         }
 
         if (event.type === 'payment_intent.succeeded') {
 
-            
+
             const paymentIntent = event.data.object
             console.log(paymentIntent);
             const userId = paymentIntent.metadata.userId
@@ -30,8 +30,9 @@ class PaymentService {
 
             console.log(`✅ Payment succeeded for user ${userId}, amount: ${amount}`)
 
+            await PaymentEvent({ userId, type: 'deposit', message: `Payment succeeded:${amount}` })
             //! Update wallet balance
-           await paymentSuccessfullEvent({userId,amount})
+            await paymentSuccessfullEvent({ userId, amount })
         }
     }
 

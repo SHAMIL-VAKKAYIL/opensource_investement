@@ -17,3 +17,16 @@ export const paymentSuccessfullEvent=async(data)=>{
     })
     
 }
+
+export const PaymentEvent = async (data) => {
+    await producer.connect()
+    await producer.send({
+        topic: 'notifications',
+        messages: [
+            {
+                key: 'withdrawal.completed',
+                value: JSON.stringify(data)
+            }
+        ]
+    })
+}
