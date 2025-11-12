@@ -26,7 +26,22 @@ class WalletService {
         const walletUpdate = await Wallet.updateOne({ userId: transaction.userId }, { $inc: { balance: -transaction?.amount }, $push: { transactions: transaction.id } }, { new: true })
         return walletUpdate
     }
+
+    async depositToWallet(data) {
+        console.log(data);
+
+        const transaction = await Transaction.create({
+            userId: data.userId,
+            amount: data.amount,
+            type: 'credit'
+        })
+
+        await Wallet.updateOne({ userId: transaction.userId }, { $inc: { balance: transaction.amount }, $push: { transactions: transaction.id } })
+
+    }
     async updateWalletAndTransaction(data) {
+        console.log(data, 'from service');
+
         for (const returnData of data) {
             const transaction = await Transaction.create({
                 userId: returnData.userId,
