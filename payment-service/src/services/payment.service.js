@@ -28,9 +28,7 @@ class PaymentService {
             const userId = paymentIntent.metadata.userId
             const amount = paymentIntent.amount / 100
 
-            console.log(`✅ Payment succeeded for user ${userId}, amount: ${amount}`)
-
-            await PaymentEvent({ userId, type: 'deposit', message: `Payment succeeded:${amount}` })
+            console.log(`Payment succeeded for user ${userId}, amount: ${amount}`)
             //! Update wallet balance
             await paymentSuccessfullEvent({ userId, amount })
         }
