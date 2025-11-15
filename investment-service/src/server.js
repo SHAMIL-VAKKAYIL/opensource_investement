@@ -3,7 +3,7 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import { connectDB } from './config/db.js'
 import investmentRouter from './routes/investment.route.js'
-import { walletCreateEmit } from './events/consumer.js'
+import { investmentSuccessEvent, walletCreateEmit } from './events/consumer.js'
 
 
 dotenv.config()
@@ -18,6 +18,7 @@ app.use('/api/investment', investmentRouter)
 const startServer = async () => {
     await connectDB()
     await walletCreateEmit()
+    await investmentSuccessEvent()
     app.listen(5002, () => {
         console.log('server running on port 5002');
     })

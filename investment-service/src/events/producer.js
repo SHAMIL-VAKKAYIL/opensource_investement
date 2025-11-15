@@ -13,7 +13,7 @@ export const InvestmentCreatedMessage = async (data) => {
 }   
 
 
-export const withdrawalEvent = async (data) => {
+export const investmentEvent = async (data) => {
     await producer.connect()
     await producer.send({
         topic: 'notifications',
