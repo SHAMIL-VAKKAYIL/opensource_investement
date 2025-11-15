@@ -24,7 +24,7 @@ export const PaymentEvent = async (data) => {
         topic: 'notifications',
         messages: [
             {
-                key: 'withdrawal.completed',
+                key: 'Payment.completed',
                 value: JSON.stringify(data)
             }
         ]
