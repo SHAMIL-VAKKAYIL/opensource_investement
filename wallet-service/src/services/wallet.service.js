@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import { emitWalletCreated } from "../events/producer.js";
+import { depositEvent, emitWalletCreated, investmentSuccessMessage } from "../events/producer.js";
 import Transaction from "../model/Transaction.js";
 import Wallet from "../model/Wallet.js";
 import Withdraw from "../model/Withdrawal.js";
@@ -24,7 +24,7 @@ class WalletService {
         })
 
         const walletUpdate = await Wallet.updateOne({ userId: transaction.userId }, { $inc: { balance: -transaction?.amount }, $push: { transactions: transaction.id } }, { new: true })
-        return walletUpdate
+        if (walletUpdate) return await investmentSuccessMessage({ transaction, status: 'success' })
     }
 
     async depositToWallet(data) {
@@ -36,7 +36,8 @@ class WalletService {
             type: 'credit'
         })
 
-        await Wallet.updateOne({ userId: transaction.userId }, { $inc: { balance: transaction.amount }, $push: { transactions: transaction.id } })
+        const updateWallet = await Wallet.updateOne({ userId: transaction.userId }, { $inc: { balance: transaction.amount }, $push: { transactions: transaction.id } })
+        if (updateWallet) await depositEvent({ amount: transaction.amount, userId: transaction.userId, status: 'success' })
 
     }
     async updateWalletAndTransaction(data) {
@@ -48,9 +49,6 @@ class WalletService {
                 amount: returnData.returnAmount,
                 type: 'credit'
             })
-            console.log(transaction);
-
-
             await Wallet.updateOne({ userId: transaction.userId }, { $inc: { balance: transaction.amount }, $push: { transactions: transaction.id } })
         }
     }

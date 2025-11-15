@@ -24,3 +24,32 @@ export const withdrawalEvent = async (data) => {
         ]
     })
 }
+
+export const depositEvent = async (data) => {
+    await producer.connect()
+    await producer.send({
+        topic: 'deposite_success',
+        messages: [
+            {
+                key: 'deposit.completed',
+                value: JSON.stringify(data)
+            }
+        ]
+    })
+}
+
+
+export const investmentSuccessMessage = async (data) => {
+    
+    
+    await producer.connect()
+    await producer.send({
+        topic: 'investment_status',
+        messages: [
+            {
+                key: 'investment.completed',
+                value: JSON.stringify(data)
+            }
+        ]
+    })
+}

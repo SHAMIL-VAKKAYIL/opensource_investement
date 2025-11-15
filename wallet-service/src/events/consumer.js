@@ -54,7 +54,7 @@ export const paymentCreated = async () => {
     await consumer.run({
         eachMessage: async ({ message, partition, topic }) => {
             const data = JSON.parse(message.value.toString())
-            await WalletService.updateWalletAndTransaction(data)
+            await WalletService.depositToWallet(data)
         }
     })
 }
