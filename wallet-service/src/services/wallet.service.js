@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import { depositEvent, emitWalletCreated, investmentSuccessMessage } from "../events/producer.js";
+import { depositEvent, emitWalletCreated, investmentFailedMessage, investmentSuccessMessage } from "../events/producer.js";
 import Transaction from "../model/Transaction.js";
 import Wallet from "../model/Wallet.js";
 import Withdraw from "../model/Withdrawal.js";
@@ -13,18 +13,49 @@ class WalletService {
         return newWallet
     }
     async newTransaction(data) {
+        console.log(data);
 
         if (!data.userId || !data.amount) {
-            throw new Error("invalid user id and amount");
+            console.log(1);
+
+            return await investmentFailedMessage({
+                message: "Invalid userId or amount",
+                transaction: null
+            });
         }
+
         const transaction = await Transaction.create({
             userId: data.userId,
             amount: data.amount,
             type: 'debit'
         })
+        if (!transaction) {
+            console.log(2)
+            return await investmentFailedMessage({
+                message: "Transaction creation failed",
+                transaction: null
+            })
+        }
+
+
 
         const walletUpdate = await Wallet.updateOne({ userId: transaction.userId }, { $inc: { balance: -transaction?.amount }, $push: { transactions: transaction.id } }, { new: true })
-        if (walletUpdate) return await investmentSuccessMessage({ transaction, status: 'success' })
+        if (!walletUpdate || walletUpdate.modifiedCount === 0) {
+            console.log(3);
+
+            await Transaction.findByIdAndDelete(transaction.id)
+            return await investmentFailedMessage({
+                message: "Wallet update failed",
+                transaction: { userId, amount }
+            });
+        }
+        return await investmentSuccessMessage({
+            transaction: {
+                id: transaction.id,
+                userId:transaction.userId,
+                amount:transaction.amount
+            }
+        });
     }
 
     async depositToWallet(data) {

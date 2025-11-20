@@ -40,15 +40,29 @@ export const depositEvent = async (data) => {
 
 
 export const investmentSuccessMessage = async (data) => {
-    
+    console.log(data);
     
     await producer.connect()
     await producer.send({
         topic: 'investment_status',
         messages: [
             {
-                key: 'investment.completed',
-                value: JSON.stringify(data)
+                key: 'wallet.deducted',
+                value: JSON.stringify({ status: 'success',  data })
+            }
+        ]
+    })
+}
+export const investmentFailedMessage = async (data) => {
+    console.log(data);
+    
+    await producer.connect()
+    await producer.send({
+        topic: 'investment_status',
+        messages: [
+            {
+                key: 'wallet.failed',
+                value: JSON.stringify({ status: 'failed',  data })
             }
         ]
     })

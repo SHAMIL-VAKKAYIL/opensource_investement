@@ -24,7 +24,10 @@ export const InvestmentCreatedEvent = async () => {
 
     await consumer.run({
         eachMessage: async ({ message }) => {
+            
             const data = JSON.parse(message.value.toString())
+            console.log(data);
+            
             await WalletService.newTransaction(data)
         }
     })
