@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import { depositEvent, emitWalletCreated, investmentFailedMessage, investmentSuccessMessage } from "../events/producer.js";
+import { depositFailedMessage, depositSuccessMessage, emitWalletCreated, investmentFailedMessage, investmentSuccessMessage } from "../events/producer.js";
 import Transaction from "../model/Transaction.js";
 import Wallet from "../model/Wallet.js";
 import Withdraw from "../model/Withdrawal.js";
@@ -13,10 +13,9 @@ class WalletService {
         return newWallet
     }
     async newTransaction(data) {
-        console.log(data);
+
 
         if (!data.userId || !data.amount) {
-            console.log(1);
 
             return await investmentFailedMessage({
                 message: "Invalid userId or amount",
@@ -30,7 +29,6 @@ class WalletService {
             type: 'debit'
         })
         if (!transaction) {
-            console.log(2)
             return await investmentFailedMessage({
                 message: "Transaction creation failed",
                 transaction: null
@@ -41,7 +39,6 @@ class WalletService {
 
         const walletUpdate = await Wallet.updateOne({ userId: transaction.userId }, { $inc: { balance: -transaction?.amount }, $push: { transactions: transaction.id } }, { new: true })
         if (!walletUpdate || walletUpdate.modifiedCount === 0) {
-            console.log(3);
 
             await Transaction.findByIdAndDelete(transaction.id)
             return await investmentFailedMessage({
@@ -52,14 +49,13 @@ class WalletService {
         return await investmentSuccessMessage({
             transaction: {
                 id: transaction.id,
-                userId:transaction.userId,
-                amount:transaction.amount
+                userId: transaction.userId,
+                amount: transaction.amount
             }
         });
     }
 
     async depositToWallet(data) {
-        console.log(data);
 
         const transaction = await Transaction.create({
             userId: data.userId,
@@ -67,8 +63,16 @@ class WalletService {
             type: 'credit'
         })
 
+        if (!transaction) {
+            return await depositFailedMessage({ transaction: null })
+        }
         const updateWallet = await Wallet.updateOne({ userId: transaction.userId }, { $inc: { balance: transaction.amount }, $push: { transactions: transaction.id } })
-        if (updateWallet) await depositEvent({ amount: transaction.amount, userId: transaction.userId, status: 'success' })
+
+
+        if (!updateWallet || updateWallet.modifiedCount === 0) {
+            return await depositFailedMessage({ transaction: null, paymentIntentId: data.paymentIntentId })
+        }
+        return await depositSuccessMessage({ amount: transaction.amount, userId: transaction.userId })
 
     }
     async updateWalletAndTransaction(data) {

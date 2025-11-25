@@ -1,5 +1,5 @@
 import stripe from "../config/stripe.js"
-import { PaymentEvent, paymentSuccessfullEvent } from "../events/producer.js"
+import { paymentSuccessfullEvent } from "../events/producer.js"
 
 class PaymentService {
 
@@ -21,16 +21,14 @@ class PaymentService {
         }
 
         if (event.type === 'payment_intent.succeeded') {
-
-
             const paymentIntent = event.data.object
             console.log(paymentIntent);
+            const paymentIntentId = paymentIntent.id
             const userId = paymentIntent.metadata.userId
             const amount = paymentIntent.amount / 100
-
             console.log(`Payment succeeded for user ${userId}, amount: ${amount}`)
             //! Update wallet balance
-            await paymentSuccessfullEvent({ userId, amount })
+            await paymentSuccessfullEvent({ userId, amount, paymentIntentId })
         }
     }
 
@@ -45,10 +43,16 @@ class PaymentService {
             metadata: { userId }
         })
 
-        return paymentIntent.client_secret
+        return { clientSecret: paymentIntent.client_secret, paymentIntentId: paymentIntent.id }
     }
 
+    async paymentRefund(data) {
+        const { paymentIntentId } = data
+        await stripe.refunds.create({
+            payment_intent: paymentIntentId
+        })
 
+    }
 }
 
 export default new PaymentService

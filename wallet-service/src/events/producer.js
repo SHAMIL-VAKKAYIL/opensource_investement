@@ -25,44 +25,73 @@ export const withdrawalEvent = async (data) => {
     })
 }
 
-export const depositEvent = async (data) => {
-    await producer.connect()
-    await producer.send({
-        topic: 'deposite_success',
-        messages: [
-            {
-                key: 'deposit.completed',
-                value: JSON.stringify(data)
-            }
-        ]
-    })
-}
+
 
 
 export const investmentSuccessMessage = async (data) => {
     console.log(data);
-    
+
     await producer.connect()
     await producer.send({
         topic: 'investment_status',
         messages: [
             {
                 key: 'wallet.deducted',
-                value: JSON.stringify({ status: 'success',  data })
+                value: JSON.stringify({ status: 'success', data })
             }
         ]
     })
 }
 export const investmentFailedMessage = async (data) => {
     console.log(data);
-    
+
     await producer.connect()
     await producer.send({
         topic: 'investment_status',
         messages: [
             {
                 key: 'wallet.failed',
-                value: JSON.stringify({ status: 'failed',  data })
+                value: JSON.stringify({ status: 'failed', data })
+            }
+        ]
+    })
+}
+
+
+// export const depositEvent = async (data) => {
+//     await producer.connect()
+//     await producer.send({
+//         topic: 'deposite_success',
+//         messages: [
+//             {
+//                 key: 'deposit.completed',
+//                 value: JSON.stringify(data)
+//             }
+//         ]
+//     })
+// }
+
+export const depositSuccessMessage = async (data) => {
+    await producer.connect()
+    await producer.send({
+        topic: 'deposite_status',
+        messages: [
+            {
+                key: 'deposit.success',
+                value: JSON.stringify({ status: 'success', data})
+            }
+        ]
+    })
+}
+
+export const depositFailedMessage = async (data) => {
+    await producer.connect()
+    await producer.send({
+        topic: 'deposite_status',
+        messages: [
+            {
+                key: 'deposit.failed',
+                value: JSON.stringify({ status: 'failed', data})
             }
         ]
     })
