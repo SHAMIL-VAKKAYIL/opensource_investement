@@ -4,6 +4,7 @@ import { depositFailedMessage, depositSuccessMessage, emitWalletCreated, investm
 import Transaction from "../model/Transaction.js";
 import Wallet from "../model/Wallet.js";
 import Withdraw from "../model/Withdrawal.js";
+import mongoose from 'mongoose';
 
 class WalletService {
 
@@ -88,48 +89,60 @@ class WalletService {
         }
     }
     async createWithdrawal(data) {
-        const { userId, amount } = data
-        const { data: userData } = await axios.get(`http://localhost:5001/api/user/v1/user/${userId}`)
-        console.log(userData);
 
-        const walletData = await Wallet.findOne({ userId })
-        if (!walletData) throw new Error('Wallet not found');
+        const session = await mongoose.startSession()
+        session.startTransaction()
+        try {
 
-        const enoughBalance = walletData.balance >= amount;
+            const { userId, amount } = data
+            const { data: userData } = await axios.get(`http://localhost:5001/api/user/v1/user/${userId}`)
 
-        const status = enoughBalance ? 'success' : 'failed';
+            const walletData = await Wallet.findOne({ userId }).session(session)
+
+            if (!walletData) throw new Error('Wallet not found');
+            if (walletData.balance < amount) {
+                const withdrawData = await Withdraw.create([{
+                    userId,
+                    amount,
+                    status: "failed",
+                    bankDetails: userData.bankDetails
+                }], { session })
+
+                await session.commitTransaction()
+                return withdrawData[0]
+            }
+
+            const withdrawData = await Withdraw.create([{
+                userId,
+                amount,
+                status: "success",
+                bankDetails: userData.data.bankDetails
+            }], { session })
 
 
-        const withdrawData = await Withdraw.create({
-            userId,
-            amount,
-            status,
-            bankDetails: userData.bankDetails,
-            createdAt: new Date(),
-            updatedAt: new Date()
-        })
+            const transaction = await Transaction.create([{
+                userId,
+                amount,
+                type: "debit"
+            }], { session })
 
-        if (!enoughBalance) return withdrawData;
+            await Wallet.updateOne({ userId },{$inc: { balance: -amount },$push: { transactions: transaction[0]._id }},{ session })
+            await session.commitTransaction()
+            return withdrawData[0]
 
-        const transaction = await Transaction.create({
-            userId: withdrawData.userId,
-            amount: withdrawData.amount,
-            type: 'debit'
-        })
-
-        await Wallet.updateOne({ userId: transaction.userId }, { $inc: { balance: -transaction.amount }, $push: { transactions: transaction.id } })
-
-        return withdrawData
+        } catch (error) {
+            await session.abortTransaction()
+            throw error
+        }
+        finally {
+            session.endSession()
+        }
 
     }
     async getAllWithdrawals(userId) {
         const withdrawls = await Withdraw.find({ userId })
         if (!withdrawls) throw new Error('withdrawls not found');
-
         return withdrawls
-
-
-
     }
 }
 
