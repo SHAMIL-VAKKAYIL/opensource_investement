@@ -3,14 +3,24 @@ import Notification from "../model/Notification.js";
 
 class NotificationService {
 
-    async createNotification(data) {
-        
-        await Notification.create({
-          userId: data.userId,
-          type: data.type,
-          message: data.message,
-        })
-    }
+  async createNotification(data) {
+
+    await Notification.create({
+      userId: data.userId,
+      type: data.type,
+      message: data.message,
+    })
+  }
+
+  async getNotficationByUser(id) {
+    const notifications = await Notification.find({ userId: id })
+    return notifications
+  }
+
+  async viewNotification(id) {
+    const viewedNoti = await Notification.findByIdAndUpdate(id, { seen: true }, { new: true })
+    return viewedNoti
+  }
 }
 
 
