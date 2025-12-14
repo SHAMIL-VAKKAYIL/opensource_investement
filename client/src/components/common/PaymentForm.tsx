@@ -1,0 +1,45 @@
+import { useStripe, useElements, PaymentElement } from '@stripe/react-stripe-js'
+import { useAppDispatch, useAppSelector } from '../../store/hook'
+import { clearPaymentState } from '../../features/payment/paymentSlice'
+
+const PaymentForm = () => {
+    const stripe = useStripe()
+    const elements = useElements()
+    const dispatch = useAppDispatch()
+
+    const { clientSecret, loading } = useAppSelector(
+        (state: any) => state.payment
+    )
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault()
+
+        if (!stripe || !elements || !clientSecret) return
+
+        const result = await stripe.confirmPayment({
+            elements,
+            confirmParams: {
+                return_url: `${window.location.origin}/payment-success`,
+            },
+        })
+
+        if (result.error) {
+            console.error(result.error.message)
+        } else {
+            dispatch(clearPaymentState())
+        }
+    }
+
+    if (!clientSecret) return null
+
+    return (
+        <form onSubmit={handleSubmit}>
+            <PaymentElement />
+            <button disabled={!stripe || loading}>
+                {loading ? 'Processing...' : 'Pay'}
+            </button>
+        </form>
+    )
+}
+
+export default PaymentForm
