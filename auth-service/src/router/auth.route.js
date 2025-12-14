@@ -9,13 +9,13 @@ import { sendUserCreatedMessage } from '../events/producer.js'
 const router = express.Router()
 
 router.post('/v1/register', async (req, res) => {
-    const { password, email, role } = req.body
+    const { password, email } = req.body
     try {
         const existinguser = await ExistingUser(email)
         if (existinguser) {
             return errorResponse(res, 401, 'user already exist')
         }
-        const user = await AuthService.register({ email, password, role })
+        const user = await AuthService.register({ email, password })
         await sendUserCreatedMessage(user._id)
 
         return successResponse(res, 201, 'user created successfully')
