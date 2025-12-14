@@ -3,6 +3,7 @@ import axiosInstance from '../../api/axios'
 
 interface WalletState {
     withdrawals: any[]
+    transactions: any[]
     loading: boolean
     error: string | null
     successMessage: string | null
@@ -10,6 +11,7 @@ interface WalletState {
 
 const initialState: WalletState = {
     withdrawals: [],
+    transactions: [],
     loading: false,
     error: null,
     successMessage: null
@@ -45,6 +47,20 @@ export const getWithdrawals = createAsyncThunk(
     }
 )
 
+// GET ALL transactions
+export const getTransactions = createAsyncThunk(
+    'wallet/getTransactions',
+    async (_, { rejectWithValue }) => {
+        try {
+            const res = await axiosInstance.get('/wallet/v1/getTransaction')
+            return res.data
+        } catch (err: any) {
+            return rejectWithValue(
+                err.response?.data?.message || 'Failed to load withdrawals'
+            )
+        }
+    }
+)
 const walletSlice = createSlice({
     name: 'wallet',
     initialState,
@@ -85,6 +101,20 @@ const walletSlice = createSlice({
                 state.loading = false
                 state.error = action.payload as string
             })
+            // GET TRANSACTIONS
+            .addCase(getTransactions.pending, (state) => {
+                state.loading = true
+                state.error = null
+            })
+            .addCase(getTransactions.fulfilled, (state, action) => {
+                state.loading = false
+                state.transactions = action.payload?.data || []
+            })
+            .addCase(getTransactions.rejected, (state, action) => {
+                state.loading = false
+                state.error = action.payload as string
+            })
+
     }
 })
 
