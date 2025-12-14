@@ -4,7 +4,6 @@ import axiosInstance from '../../api/axios'
 interface RegisterPayload {
     email: string
     password: string
-    role?: string
 }
 
 interface AuthState {
@@ -18,6 +17,8 @@ interface AuthState {
 export const register = createAsyncThunk(
     'auth/register',
     async (data: RegisterPayload, { rejectWithValue }) => {
+        console.log(data);
+        
         try {
             const res = await axiosInstance.post('/auth/v1/register', data)
             return res.data       // you MUST return the data
@@ -79,7 +80,8 @@ const authSlice = createSlice({
             })
             .addCase(register.fulfilled, (state) => {
                 state.loading = false
-                state.initialized = true
+                window.location.href='/login'
+                // state.initialized = true
             })
             .addCase(register.rejected, (state, action) => {
                 state.loading = false
@@ -94,8 +96,10 @@ const authSlice = createSlice({
             .addCase(login.fulfilled, (state, action) => {
                 state.loading = false
                 state.initialized = true
-                state.user = action.payload?.data?.user || null
-                state.token = action.payload?.data?.token || null
+                console.log(action.payload.message);
+                
+                state.user = action.payload?.message?.user || null
+                state.token = action.payload?.message?.token || null
             })
             .addCase(login.rejected, (state, action) => {
                 state.loading = false

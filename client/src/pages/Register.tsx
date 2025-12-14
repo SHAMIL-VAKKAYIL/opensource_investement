@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../store/hook'
 import { register } from '../features/auth/authSlice'
+import { Link } from 'react-router-dom'
 
 const Register = () => {
     const dispatch = useAppDispatch()
@@ -24,7 +25,7 @@ const Register = () => {
                     Register
                 </h1>
 
-                <form onSubmit={handleSubmit} className="space-y-6 bg">
+                <form onSubmit={handleSubmit} className="space-y-6 mb-3">
                     <div>
                         <label className="block text-sm mb-2">
                             Email
@@ -85,6 +86,7 @@ const Register = () => {
                         {loading ? 'Creating...' : 'Create account'}
                     </button>
                 </form>
+                <Link to={'/login'}>Already Have Account ?</Link>
             </div>
         </div>
     )
