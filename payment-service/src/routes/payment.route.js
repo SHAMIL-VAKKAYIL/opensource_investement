@@ -15,7 +15,7 @@ router.post('/v1/deposit', verifyUser, async (req, res) => {
         const paymentIntent = await PaymentService.walletDeposit({ userId, amount })
         console.log(paymentIntent);
 
-        return successResponse(res, 201, paymentIntent)
+        return successResponse(res, 200, paymentIntent)
 
 
     } catch (error) {

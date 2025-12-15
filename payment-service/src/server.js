@@ -4,6 +4,7 @@ import dotenv from 'dotenv'
 import { connectDB } from './config/db.js'
 import paymentRouter from './routes/payment.route.js'
 import { paymentSuccessEvent } from './events/consumer.js'
+import { createProxyMiddleware } from 'http-proxy-middleware'
 
 
 dotenv.config()
@@ -20,6 +21,14 @@ app.use(
     },
   })
 )
+app.use(
+    '/api/payment',
+    createProxyMiddleware({
+        target: 'http://localhost:5006',
+        changeOrigin: true,
+    })
+)
+
 app.use('/api/payment', paymentRouter)
 
 
