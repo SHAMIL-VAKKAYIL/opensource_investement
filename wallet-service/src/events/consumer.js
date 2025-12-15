@@ -11,6 +11,8 @@ export const walletCreatedEvent = async () => {
     await consumer.run({
         eachMessage: async ({ message }) => {
             const data = JSON.parse(message.value.toString())
+            console.log(data,'from consu');
+            
             await WalletService.createWallet(data)
         }
     })

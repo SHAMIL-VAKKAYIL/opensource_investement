@@ -4,6 +4,7 @@ import dotenv from 'dotenv'
 import { connectDB } from './config/db.js'
 import { InvestmentCreatedEvent, returnGenarationEvent, walletCreatedEvent } from './events/consumer.js'
 import walletRouter from './routes/wallet.route.js'
+import { createProxyMiddleware } from 'http-proxy-middleware'
 
 
 dotenv.config()
@@ -12,6 +13,11 @@ const app = express()
 app.use(express.json())
 app.use(cors())
 
+app.use('/api/wallet',
+    createProxyMiddleware({
+        target: 'http://localhost:5003',
+        changeOrigin: true,
+    }))
 app.use('/api/wallet', walletRouter)
 
 

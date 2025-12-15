@@ -126,7 +126,7 @@ class WalletService {
                 type: "debit"
             }], { session })
 
-            await Wallet.updateOne({ userId },{$inc: { balance: -amount },$push: { transactions: transaction[0]._id }},{ session })
+            await Wallet.updateOne({ userId }, { $inc: { balance: -amount }, $push: { transactions: transaction[0]._id } }, { session })
             await session.commitTransaction()
             return withdrawData[0]
 
@@ -143,6 +143,12 @@ class WalletService {
         const withdrawls = await Withdraw.find({ userId })
         if (!withdrawls) throw new Error('withdrawls not found');
         return withdrawls
+    }
+
+    async getTransactions(userId) {
+        const transactions = await Transaction.find({ userId })
+        if (!transactions) throw new Error('transactions not found');
+        return transactions
     }
 }
 

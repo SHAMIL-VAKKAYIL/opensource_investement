@@ -37,5 +37,17 @@ router.get('/v1/withdraw', verifyUser, async (req, res) => {
     }
 })
 
+router.get('/v1/getTransaction', verifyUser, async (req, res) => {
+    const userId = req.userId
+
+    try {
+        const transactions = await WalletService.getTransactions(userId)
+        return successResponse(res, 200, transactions)
+
+    } catch (error) {
+        console.log(error)
+        return errorResponse(res, 500, 'server err')
+    }
+})
 
 export default router
