@@ -1,26 +1,27 @@
 import express from 'express'
-import { errorResponse, successResponse } from '../utils/response.util';
-import NotificationService from '../service/notification.service';
+import { errorResponse, successResponse } from '../utils/response.util.js';
+import NotificationService from '../service/notification.service.js';
+import { verifyUser } from '../middleware/verifyUser.js';
 
 const router = express.Router()
 
-router.get('/user/:id', async (req, res) => {
+router.get('/v1/user/:id', verifyUser, async (req, res) => {
     const { id } = req.params
     try {
         const notifications = await NotificationService.getNotficationByUser(id)
-        return successResponse(res, 201, notifications)
+        return successResponse(res, 200, notifications)
     } catch (error) {
         console.log(error);
         return errorResponse(res, 500, 'Internal server error')
     }
 })
 
-router.put('/viewed/:id', async (req, res) => {
+router.put('/v1/viewed/:id', verifyUser, async (req, res) => {
     const { id } = req.params
 
     try {
         const updateNotification = await NotificationService.viewNotification(id)
-        return successResponse(res, 201, updateNotification)
+        return successResponse(res, 200, updateNotification)
 
     } catch (error) {
         console.log(error);

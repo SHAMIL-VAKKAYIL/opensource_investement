@@ -4,6 +4,7 @@ import dotenv from 'dotenv'
 import { connectDB } from './config/db.js'
 import notificationRouter from './routes/notification.route.js'
 import { notificationConsumer } from './events/consumer.js'
+import { createProxyMiddleware } from 'http-proxy-middleware'
 
 
 dotenv.config()
@@ -12,6 +13,13 @@ const app = express()
 app.use(express.json())
 app.use(cors())
 
+app.use(
+  '/api/notification',
+  createProxyMiddleware({
+    target: 'http://localhost:5005',
+    changeOrigin: true,
+  })
+)
 app.use('/api/notification', notificationRouter)
 
 
