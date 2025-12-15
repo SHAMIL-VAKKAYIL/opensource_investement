@@ -4,13 +4,20 @@ import dotenv from 'dotenv'
 import { connectDB } from './config/db.js'
 import investmentRouter from './routes/investment.route.js'
 import { investmentSuccessEvent, walletCreateEmit } from './events/consumer.js'
-
+import { createProxyMiddleware } from 'http-proxy-middleware'
 
 dotenv.config()
 const app = express()
 
 app.use(express.json())
 app.use(cors())
+
+app.use('/api/investment',
+    createProxyMiddleware({
+        target: 'http://localhost:5002',
+        changeOrigin: true,
+    })
+)
 
 app.use('/api/investment', investmentRouter)
 
