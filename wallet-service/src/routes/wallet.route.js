@@ -25,6 +25,7 @@ router.post('/v1/withdraw', verifyUser, async (req, res) => {
 
     }
 })
+
 router.get('/v1/withdraw', verifyUser, async (req, res) => {
     const userId = req.userId
     try {
@@ -49,5 +50,20 @@ router.get('/v1/getTransaction', verifyUser, async (req, res) => {
         return errorResponse(res, 500, 'server err')
     }
 })
+
+router.get('/v1/getWallet', verifyUser, async (req, res) => {
+    const userId = req.userId
+
+    try {
+        const wallet = await WalletService.getWallet(userId)
+        return successResponse(res, 200, wallet)
+
+    } catch (error) {
+        console.log(error)
+        return errorResponse(res, 500, 'server err')
+    }
+})
+
+
 
 export default router
