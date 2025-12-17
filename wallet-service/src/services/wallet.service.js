@@ -150,6 +150,12 @@ class WalletService {
         if (!transactions) throw new Error('transactions not found');
         return transactions
     }
+    
+    async getWallet(userId){
+        const wallet =await Wallet.find({userId})
+             if (!wallet) throw new Error('wallet not found');
+        return wallet
+    }
 }
 
 
