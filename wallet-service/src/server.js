@@ -5,20 +5,27 @@ import { connectDB } from './config/db.js'
 import { InvestmentCreatedEvent, returnGenarationEvent, walletCreatedEvent } from './events/consumer.js'
 import walletRouter from './routes/wallet.route.js'
 import { createProxyMiddleware } from 'http-proxy-middleware'
+// import cookieParser from 'cookie-parser'
 
 
 dotenv.config()
 const app = express()
 
 app.use(express.json())
-app.use(cors())
 
-app.use('/api/wallet',
-    createProxyMiddleware({
-        target: 'http://localhost:5003',
-        changeOrigin: true,
-    }))
-app.use('/api/wallet', walletRouter)
+// app.use(cookieParser())
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials: true
+}))
+
+app.use((req, _res, next) => {
+    console.log('WALLET SERVICE RECEIVED:', req.method, req.originalUrl)
+    next()
+})
+
+
+app.use('/', walletRouter)
 
 
 const startServer = async () => {
