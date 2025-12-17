@@ -4,6 +4,7 @@ import axiosInstance from '../../api/axios'
 interface WalletState {
     withdrawals: any[]
     transactions: any[]
+    wallet: null | any
     loading: boolean
     error: string | null
     successMessage: string | null
@@ -12,6 +13,7 @@ interface WalletState {
 const initialState: WalletState = {
     withdrawals: [],
     transactions: [],
+    wallet: null,
     loading: false,
     error: null,
     successMessage: null
@@ -57,6 +59,20 @@ export const getTransactions = createAsyncThunk(
         } catch (err: any) {
             return rejectWithValue(
                 err.response?.data?.message || 'Failed to load withdrawals'
+            )
+        }
+    }
+)
+// GET  wallet
+export const getWallet = createAsyncThunk(
+    'wallet/getWallet',
+    async (_, { rejectWithValue }) => {
+        try {
+            const res = await axiosInstance.get('/wallet/v1/getWallet')
+            return res.data
+        } catch (err: any) {
+            return rejectWithValue(
+                err.response?.data?.message || 'Failed to load wallet'
             )
         }
     }
@@ -114,6 +130,20 @@ const walletSlice = createSlice({
                 state.loading = false
                 state.error = action.payload as string
             })
+            // GET wallet
+            .addCase(getWallet.pending, (state) => {
+                state.loading = true
+                state.error = null
+            })
+            .addCase(getWallet.fulfilled, (state, action) => {
+                state.loading = false
+                state.wallet = action.payload?.data || {}
+            })
+            .addCase(getWallet.rejected, (state, action) => {
+                state.loading = false
+                state.error = action.payload as string
+            })
+
 
     }
 })
