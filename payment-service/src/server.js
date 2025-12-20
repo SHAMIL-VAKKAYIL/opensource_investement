@@ -10,26 +10,29 @@ import { createProxyMiddleware } from 'http-proxy-middleware'
 dotenv.config()
 const app = express()
 
+app.use((req, _res, next) => {
+    console.log('payment SERVICE RECEIVED:', req.method, req.originalUrl)
+    next()
+})
+
 // app.use(express.json())
-app.use(cors())
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials: true
+}))
+
 app.use(
   express.json({
     verify: (req, res, buf) => {
-      if (req.originalUrl.includes('/api/payment/v1/webhook')) {
+      if (req.originalUrl.includes('/v1/webhook')) {
         req.rawBody = buf.toString() 
       }
     },
   })
 )
-app.use(
-    '/api/payment',
-    createProxyMiddleware({
-        target: 'http://localhost:5006',
-        changeOrigin: true,
-    })
-)
 
-app.use('/api/payment', paymentRouter)
+
+app.use('/', paymentRouter)
 
 
 const startServer = async () => {

@@ -10,10 +10,11 @@ class PaymentService {
         let event
         try {
             event = stripe.webhooks.constructEvent(
-                req.body,
+                req.rawBody,
                 sig,
                 process.env.STRIPE_WEBHOOK_SECRET
             )
+            console.log(event, 'webhook');
 
         } catch (err) {
             console.error('Webhook signature failed:', err.message)
@@ -22,7 +23,7 @@ class PaymentService {
 
         if (event.type === 'payment_intent.succeeded') {
             const paymentIntent = event.data.object
-            console.log(paymentIntent);
+            console.log(paymentIntent, 'webhook');
             const paymentIntentId = paymentIntent.id
             const userId = paymentIntent.metadata.userId
             const amount = paymentIntent.amount / 100

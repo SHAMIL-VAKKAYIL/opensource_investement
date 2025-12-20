@@ -10,6 +10,8 @@ const router = express.Router()
 router.post('/v1/deposit', verifyUser, async (req, res) => {
     const userId = req.userId
     const { amount } = req.body
+    console.log(userId);
+    
     try {
 
         const paymentIntent = await PaymentService.walletDeposit({ userId, amount })
@@ -31,6 +33,7 @@ router.post('/v1/webhook', express.raw({ type: 'application/json' }), async (req
     try {
 
         const webhook = await PaymentService.handleWebHook({req})
+console.log(webhook);
 
         return successResponse(res, 201, webhook)
 

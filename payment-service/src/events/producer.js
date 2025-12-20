@@ -7,6 +7,8 @@ const producer = kafka.producer()
 
 
 export const paymentSuccessfullEvent=async(data)=>{
+    console.log(data);
+    
     await producer.connect()
     await producer.send({
         topic:'payment_created',
