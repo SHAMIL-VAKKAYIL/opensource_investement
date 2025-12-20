@@ -7,6 +7,7 @@ import walletReducer from '../features/wallet/walletSlice'
 import investmentReducer from '../features/investment/InvestmentSlice'
 import userReducer from '../features/user/userSlice'
 import notificationReducer from '../features/notification/notificationSlice'
+import paymentReducer from '../features/payment/paymentSlice'
 
 const rootReducer = combineReducers({
     auth: authReducer,
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
     investment: investmentReducer,
     user: userReducer,
     notification: notificationReducer,
+    payment:paymentReducer
 })
 
 const persistConfig = {

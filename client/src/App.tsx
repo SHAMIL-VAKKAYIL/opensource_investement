@@ -5,6 +5,9 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import AdminLayout from './components/layouts/AdminLayout'
 import UserLayout from './components/layouts/UserLayout'
+import Wallet from './pages/user/Wallet'
+import PaymentPage from './pages/user/PaymentPage'
+
 
 function App() {
 
@@ -20,7 +23,14 @@ function App() {
       path: '/',
       element: < UserLayout />,
       children: [
-
+        {
+          path: '/wallet',
+          element: <Wallet />
+        },
+        {
+          path: '/payment',
+          element: <PaymentPage />
+        }
       ]
 
     },

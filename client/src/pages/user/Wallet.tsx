@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getWallet } from '../../features/wallet/walletSlice'
 import type { RootState, AppDispatch } from '../../store/store'
 import { createDepositIntent } from '../../features/payment/paymentSlice'
+import { useNavigate } from 'react-router-dom'
 
 function Wallet() {
   const dispatch = useDispatch<AppDispatch>()
@@ -16,11 +17,12 @@ function Wallet() {
     dispatch(getWallet())
   }, [dispatch])
 
+  const navigate = useNavigate()
   const handleDeposit = async () => {
     const amount = 500 // hardcoded for now
 
-    const res = await dispatch(createDepositIntent(amount)).unwrap()
-
+    await dispatch(createDepositIntent(amount)).unwrap()
+    navigate('/payment')
     // setClientSecret(res.clientSecret)
   }
 
@@ -52,7 +54,7 @@ function Wallet() {
           </div>
 
           <div className="flex gap-3">
-            <button  onClick={handleDeposit} className="px-4 py-2 rounded-lg bg-black text-white text-sm hover:bg-gray-800 transition">
+            <button onClick={handleDeposit} className="px-4 py-2 rounded-lg bg-black text-white text-sm hover:bg-gray-800 transition">
               Deposit
             </button>
             <button className="px-4 py-2 rounded-lg border border-black text-black text-sm hover:bg-gray-100 transition">

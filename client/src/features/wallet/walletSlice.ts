@@ -69,7 +69,9 @@ export const getWallet = createAsyncThunk(
     async (_, { rejectWithValue }) => {
         try {
             const res = await axiosInstance.get('/wallet/v1/getWallet')
-            return res.data
+            console.log(res.data);
+
+            return res.data.message
         } catch (err: any) {
             return rejectWithValue(
                 err.response?.data?.message || 'Failed to load wallet'
@@ -137,7 +139,7 @@ const walletSlice = createSlice({
             })
             .addCase(getWallet.fulfilled, (state, action) => {
                 state.loading = false
-                state.wallet = action.payload?.data || {}
+                state.wallet = action.payload|| {}
             })
             .addCase(getWallet.rejected, (state, action) => {
                 state.loading = false

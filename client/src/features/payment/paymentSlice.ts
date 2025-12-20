@@ -21,6 +21,9 @@ export const createDepositIntent = createAsyncThunk(
                 amount,
             })
 
+            // console.log(res.data.message.clientSecret);
+            
+
             return res.data
         } catch (err: any) {
             return rejectWithValue(
@@ -48,7 +51,9 @@ const paymentSlice = createSlice({
             .addCase(createDepositIntent.fulfilled, (state, action) => {
                 state.loading = false
                 state.clientSecret =
-                    action.payload?.data?.client_secret || null
+                    action.payload?.message?.clientSecret || null
+                    // console.log(action.payload?.message?.clientSecret);
+                    
             })
             .addCase(createDepositIntent.rejected, (state, action) => {
                 state.loading = false
