@@ -3,18 +3,38 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import { connectDB } from './config/db.js'
 import authRouter from './router/auth.route.js'
+import { createProxyMiddleware } from 'http-proxy-middleware'
+
 
 
 dotenv.config()
 const app = express()
 
-app.use(express.json())
+
 app.use(cors({
-    origin:'http://localhost:5173',
-    credentials:true
+    origin: 'http://localhost:5173',
+    credentials: true
 }))
 
-app.use('/api/auth',authRouter)
+app.use('/api/wallet',
+    createProxyMiddleware({
+        target: 'http://localhost:5003',
+        changeOrigin: true,
+        pathRewrite: {
+            '^/api/wallet': '',
+        },
+    }))
+
+app.use('/api/payment',
+    createProxyMiddleware({
+        target: 'http://localhost:5006',
+        changeOrigin: true,
+        pathRewrite: {
+            '^/api/payment': '',
+        },
+    }))
+app.use(express.json())
+app.use('/api/auth', authRouter)
 
 
 const startServer = async () => {
