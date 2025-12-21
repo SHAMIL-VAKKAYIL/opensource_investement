@@ -38,7 +38,7 @@ const PaymentForm = () => {
     return (
         <form onSubmit={handleSubmit}>
             <PaymentElement />
-            <button disabled={!stripe || loading}>
+            <button className='bg-black text-white px-5 py-3 rounded-2xl' disabled={!stripe || loading}>
                 {loading ? 'Processing...' : 'Pay'}
             </button>
         </form>

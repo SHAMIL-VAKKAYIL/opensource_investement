@@ -19,7 +19,7 @@ function Wallet() {
 
   const navigate = useNavigate()
   const handleDeposit = async () => {
-    const amount = 500 // hardcoded for now
+    const amount = 20000 // hardcoded for now
 
     await dispatch(createDepositIntent(amount)).unwrap()
     navigate('/payment')
