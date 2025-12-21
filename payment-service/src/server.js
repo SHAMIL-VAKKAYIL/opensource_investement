@@ -15,25 +15,20 @@ app.use((req, _res, next) => {
     next()
 })
 
-// app.use(express.json())
 app.use(cors({
     origin: 'http://localhost:5173',
     credentials: true
 }))
 
-app.use(
-  express.json({
-    verify: (req, res, buf) => {
-      if (req.originalUrl.includes('/v1/webhook')) {
-        req.rawBody = buf.toString() 
-      }
-    },
-  })
+app.post(
+  '/v1/webhook',
+  express.raw({ type: 'application/json' }),
+  paymentRouter
 )
 
+app.use(express.json())
 
 app.use('/', paymentRouter)
-
 
 const startServer = async () => {
     await connectDB()
