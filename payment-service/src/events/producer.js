@@ -7,7 +7,7 @@ const producer = kafka.producer()
 
 
 export const paymentSuccessfullEvent=async(data)=>{
-    console.log(data);
+    console.log(data,'sdfsdiufyshi');
     
     await producer.connect()
     await producer.send({

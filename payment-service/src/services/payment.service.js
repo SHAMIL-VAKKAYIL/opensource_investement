@@ -3,18 +3,17 @@ import { paymentSuccessfullEvent } from "../events/producer.js"
 
 class PaymentService {
 
-    async handleWebHook({ req }) {
+    async handleWebHook(req) {
 
         const sig = req.headers['stripe-signature']
 
         let event
         try {
             event = stripe.webhooks.constructEvent(
-                req.rawBody,
+                req.body,
                 sig,
                 process.env.STRIPE_WEBHOOK_SECRET
             )
-            console.log(event, 'webhook');
 
         } catch (err) {
             console.error('Webhook signature failed:', err.message)
@@ -22,14 +21,18 @@ class PaymentService {
         }
 
         if (event.type === 'payment_intent.succeeded') {
+            
             const paymentIntent = event.data.object
             console.log(paymentIntent, 'webhook');
             const paymentIntentId = paymentIntent.id
-            const userId = paymentIntent.metadata.userId
+            // const userId = paymentIntent.metadata.userId
+            const userId = '693ed2bb32bac0efe8e8126d'
+            
             const amount = paymentIntent.amount / 100
             console.log(`Payment succeeded for user ${userId}, amount: ${amount}`)
             //! Update wallet balance
             await paymentSuccessfullEvent({ userId, amount, paymentIntentId })
+            return event
         }
     }
 
