@@ -2,7 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import { connectDB } from './config/db.js'
-import { InvestmentCreatedEvent, returnGenarationEvent, walletCreatedEvent } from './events/consumer.js'
+import { InvestmentCreatedEvent, paymentCreated, returnGenarationEvent, walletCreatedEvent } from './events/consumer.js'
 import walletRouter from './routes/wallet.route.js'
 import { createProxyMiddleware } from 'http-proxy-middleware'
 // import cookieParser from 'cookie-parser'
@@ -33,6 +33,7 @@ const startServer = async () => {
     await walletCreatedEvent()
     await InvestmentCreatedEvent()
     await returnGenarationEvent()
+    await paymentCreated()
     app.listen(5003, () => {
         console.log('server running on port 5003');
     })

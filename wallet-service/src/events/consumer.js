@@ -59,6 +59,8 @@ export const paymentCreated = async () => {
     await consumer.run({
         eachMessage: async ({ message, partition, topic }) => {
             const data = JSON.parse(message.value.toString())
+            console.log(data,'sdfasfas');
+            
             await WalletService.depositToWallet(data)
         }
     })
