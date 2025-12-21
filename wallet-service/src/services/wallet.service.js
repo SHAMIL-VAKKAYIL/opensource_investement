@@ -152,7 +152,7 @@ class WalletService {
     }
     
     async getWallet(userId){
-        const wallet =await Wallet.find({userId})
+        const wallet =await Wallet.findOne({userId})
              if (!wallet) throw new Error('wallet not found');
         return wallet
     }
