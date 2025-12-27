@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axiosInstance from '../../api/axios'
+import type { UserProfile } from '../../types/user'
 
 interface UserState {
     users: any[]
@@ -34,6 +35,8 @@ export const fetchUser = createAsyncThunk(
     async (id: string, { rejectWithValue }) => {
         try {
             const res = await axiosInstance.get(`/user/v1/user/${id}`)
+            console.log(res.data);
+            
             return res.data
         } catch (err: any) {
             return rejectWithValue(err.response?.data?.message || 'Failed to fetch user')
@@ -57,7 +60,9 @@ export const addUserData = createAsyncThunk(
 // UPDATE USER
 export const updateUser = createAsyncThunk(
     'user/updateUser',
-    async ({ id, data }: { id: string; data: any }, { rejectWithValue }) => {
+    async ({ id, data }: { id: any; data: UserProfile }, { rejectWithValue }) => {
+        console.log(data,id);
+        
         try {
             const res = await axiosInstance.put(`/user/v1/update/${id}`, data)
             return res.data
@@ -95,7 +100,7 @@ const userSlice = createSlice({
             })
             .addCase(fetchUser.fulfilled, (state, action) => {
                 state.loading = false
-                state.selectedUser = action.payload?.data || null
+                state.selectedUser = action.payload?.message || null
             })
             .addCase(fetchUser.rejected, (state, action) => {
                 state.loading = false

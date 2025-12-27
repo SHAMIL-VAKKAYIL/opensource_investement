@@ -126,7 +126,7 @@ const walletSlice = createSlice({
             })
             .addCase(getTransactions.fulfilled, (state, action) => {
                 state.loading = false
-                state.transactions = action.payload?.data || []
+                state.transactions = action.payload.message || []
             })
             .addCase(getTransactions.rejected, (state, action) => {
                 state.loading = false

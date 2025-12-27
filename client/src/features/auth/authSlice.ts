@@ -117,7 +117,10 @@ const authSlice = createSlice({
                 state.loading = false
                 state.user = null
                 state.token = null
+                localStorage.removeItem('token')
                 state.initialized = false
+                window.location.href='/login'
+
             })
             .addCase(logout.rejected, (state, action) => {
                 state.loading = false

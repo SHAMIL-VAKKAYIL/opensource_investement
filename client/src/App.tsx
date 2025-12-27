@@ -7,6 +7,8 @@ import AdminLayout from './components/layouts/AdminLayout'
 import UserLayout from './components/layouts/UserLayout'
 import Wallet from './pages/user/Wallet'
 import PaymentPage from './pages/user/PaymentPage'
+import Transaction from './pages/user/Transaction'
+import Profile from './pages/user/Profile'
 
 
 function App() {
@@ -30,6 +32,13 @@ function App() {
         {
           path: '/payment',
           element: <PaymentPage />
+        },
+        {
+          path: '/transactions',
+          element: <Transaction />
+        }, {
+          path: '/profile',
+          element: <Profile />
         }
       ]
 

@@ -11,7 +11,6 @@ function Wallet() {
   const { wallet, loading, error } = useSelector(
     (state: RootState) => state.wallet
   )
-  console.log(wallet);
 
   useEffect(() => {
     dispatch(getWallet())
@@ -64,43 +63,6 @@ function Wallet() {
         </div>
       </div>
 
-      {/* Transactions */}
-      {/* <div className="max-w-4xl mx-auto mt-10">
-        <h3 className="text-lg font-semibold mb-4">
-          Transactions
-        </h3>
-
-        {wallet?.transactions?.length === 0 ? (
-          <div className="border border-gray-800 rounded-lg p-6 text-center text-gray-400">
-            No transactions yet
-          </div>
-        ) : (
-          <div className="space-y-3">
-            {wallet.transactions.map((tx: any) => (
-              <div
-                key={tx.id}
-                className="flex justify-between items-center border border-gray-800 rounded-lg p-4"
-              >
-                <div>
-                  <p className="text-sm font-medium">
-                    {tx.type}
-                  </p>
-                  <p className="text-xs text-gray-400">
-                    {new Date(tx.createdAt).toLocaleString()}
-                  </p>
-                </div>
-
-                <p
-                  className={`text-sm font-semibold ${tx.amount > 0 ? 'text-green-400' : 'text-red-400'
-                    }`}
-                >
-                  {tx.amount > 0 ? '+' : '-'}₹{Math.abs(tx.amount)}
-                </p>
-              </div>
-            ))}
-          </div>
-        )}
-      </div> */}
     </div>
   )
 }
