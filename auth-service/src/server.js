@@ -33,6 +33,16 @@ app.use('/api/payment',
             '^/api/payment': '',
         },
     }))
+
+app.use('/api/user',
+    createProxyMiddleware({
+        target: 'http://localhost:5001',
+        changeOrigin: true,
+        pathRewrite: {
+            '^/api/user': '',
+        },
+    }))
+
 app.use(express.json())
 app.use('/api/auth', authRouter)
 
