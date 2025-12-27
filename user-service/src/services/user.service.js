@@ -8,11 +8,6 @@ class UserSerivce {
         const createUser = await UserDetails.create({userId})
         return createUser
     }
-    async addingUserData(data) {
-        const { addUserData, userId } = data
-        const addData = await UserDetails.updateOne({ userId }, { $set: { ...addUserData } }, { new: true })
-        return addData
-    }
     async updateUser(data) {
         
         const { updateUser, userId } = data
@@ -20,6 +15,8 @@ class UserSerivce {
 
         
         const updatedUser = await UserDetails.updateOne({ userId:id }, { $set: { ...updateUser } }, { new: true })
+        console.log(updatedUser);
+        
         return updatedUser
     }
     async getUsers(){
@@ -28,6 +25,8 @@ class UserSerivce {
     }
     async getUser(id){
         const user = await UserDetails.findOne({userId:id})
+        // console.log(user);
+        
         return user
     }
 }
