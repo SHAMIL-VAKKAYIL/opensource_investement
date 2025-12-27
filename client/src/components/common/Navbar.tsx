@@ -17,6 +17,16 @@ const Navbar = () => {
 
                 {/* Center */}
                 <div className="flex items-center gap-8 text-sm">
+                      <NavLink
+                        to="/"
+                        className={({ isActive }) =>
+                            `hover:text-white transition ${
+                                isActive ? 'underline' : 'text-white/70'
+                            }`
+                        }
+                    >
+                        Home
+                    </NavLink>
                     <NavLink
                         to="/wallet"
                         className={({ isActive }) =>
@@ -27,7 +37,6 @@ const Navbar = () => {
                     >
                         Wallet
                     </NavLink>
-
                     <NavLink
                         to="/transactions"
                         className={({ isActive }) =>
