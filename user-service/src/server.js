@@ -11,17 +11,16 @@ dotenv.config()
 const app = express()
 
 app.use(express.json())
-app.use(cors())
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials: true
+}
+))
 
 
 
-app.use('/api/user',
-    createProxyMiddleware({
-        target: 'http://localhost:5001',
-        changeOrigin: true,
-    })
-)
-app.use('/api/user', userRouter)
+
+app.use('/', userRouter)
 
 
 const startServer = async () => {
