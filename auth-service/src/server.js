@@ -16,12 +16,39 @@ app.use(cors({
     credentials: true
 }))
 
+app.use('/api/user',
+    createProxyMiddleware({
+        target: 'http://localhost:5001',
+        changeOrigin: true,
+        pathRewrite: {
+            '^/api/user': '',
+        },
+    }))
+
+app.use('/api/investment',
+    createProxyMiddleware({
+        target: 'http://localhost:5002',
+        changeOrigin: true,
+        pathRewrite: {
+            '^/api/user': '',
+        },
+    }))
+
 app.use('/api/wallet',
     createProxyMiddleware({
         target: 'http://localhost:5003',
         changeOrigin: true,
         pathRewrite: {
             '^/api/wallet': '',
+        },
+    }))
+
+app.use('/api/notification',
+    createProxyMiddleware({
+        target: 'http://localhost:5005',
+        changeOrigin: true,
+        pathRewrite: {
+            '^/api/user': '',
         },
     }))
 
@@ -34,14 +61,6 @@ app.use('/api/payment',
         },
     }))
 
-app.use('/api/user',
-    createProxyMiddleware({
-        target: 'http://localhost:5001',
-        changeOrigin: true,
-        pathRewrite: {
-            '^/api/user': '',
-        },
-    }))
 
 app.use(express.json())
 app.use('/api/auth', authRouter)
