@@ -47,6 +47,16 @@ const Navbar = () => {
                     >
                         Transactions
                     </NavLink>
+                     <NavLink
+                        to="/notification"
+                        className={({ isActive }) =>
+                            `hover:text-white transition ${
+                                isActive ? 'underline' : 'text-white/70'
+                            }`
+                        }
+                    >
+                        Notification
+                    </NavLink>
 
                     <NavLink
                         to="/profile"
