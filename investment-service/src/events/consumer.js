@@ -20,9 +20,9 @@ export const walletCreateEmit = async () => {
 
 
 export const investmentSuccessEvent = async () => {
-    const consumer = kafka.consumer({ groupId: 'investment-service-status' })
+    const consumer = kafka.consumer({ groupId: 'investment-service-status-v2' })
     await consumer.connect()
-    await consumer.subscribe({ topic: 'investment_status' })
+    await consumer.subscribe({ topic: 'investment_status', fromBeginning: true, })
     await consumer.run({
         eachMessage: async ({ partition, message, topic }) => {
             const data = JSON.parse(message.value.toString())
