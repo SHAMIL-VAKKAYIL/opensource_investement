@@ -1,4 +1,4 @@
-import { RouterProvider, createBrowserRouter } from 'react-router-dom'
+import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom'
 
 import './App.css'
 import Login from './pages/Login'
@@ -9,35 +9,51 @@ import Wallet from './pages/user/Wallet'
 import PaymentPage from './pages/user/PaymentPage'
 import Transaction from './pages/user/Transaction'
 import Profile from './pages/user/Profile'
+import Notification from './pages/user/Notification'
+import type { RootState } from './store/store'
+import { useSelector } from 'react-redux'
+import AdminHome from './pages/admin/AdminHome'
 
 
 function App() {
+  const authUser = useSelector((state: RootState) => state.auth.user)
+  console.log(authUser);
 
   const router = createBrowserRouter([
     {
       path: '/admin/*',
-      element: <AdminLayout />,
+      element: authUser.role === 'admin' ? <AdminLayout /> : <Navigate to="/login" />,
       children: [
-
+        {
+          index:true,
+          element: <AdminHome />
+        }
       ]
     },
     {
       path: '/',
-      element: < UserLayout />,
+      element: authUser?.role === 'user'
+        ? <UserLayout />
+        : <Navigate to="/login" />,
       children: [
         {
-          path: '/wallet',
+          path: 'wallet',
           element: <Wallet />
         },
         {
-          path: '/payment',
+          path: 'payment',
           element: <PaymentPage />
         },
         {
-          path: '/transactions',
+          path: 'transactions',
           element: <Transaction />
-        }, {
-          path: '/profile',
+        },
+        {
+          path: 'notification',
+          element: <Notification />
+        },
+        {
+          path: 'profile',
           element: <Profile />
         }
       ]
