@@ -36,8 +36,28 @@ class InvestmentServices {
 
     async activeInvestments() {
         const activeInvestmentData = Investment.find({ status: 'active' })
-        
+
         return activeInvestmentData
+    }
+
+
+    async Investments() {
+        const InvestmentData = Investment.find()
+        return InvestmentData
+    }
+
+    async UpdateStatus({ id, status }) {
+        console.log(id, status);
+
+        const update = Investment.findByIdAndUpdate(
+            id,
+            { status },
+            { new: true }
+        )
+
+        console.log(update);
+
+        return update
     }
 }
 
