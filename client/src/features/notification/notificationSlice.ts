@@ -2,6 +2,8 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axiosInstance from '../../api/axios'
 
 interface Notification {
+    type: string
+    seen: any
     _id: string
     userId: string
     title?: string
@@ -78,7 +80,7 @@ const notificationSlice = createSlice({
             })
             .addCase(fetchNotificationsByUser.fulfilled, (state, action) => {
                 state.loading = false
-                state.notifications = action.payload?.data || []
+                state.notifications = action.payload?.message || []
             })
             .addCase(fetchNotificationsByUser.rejected, (state, action) => {
                 state.loading = false

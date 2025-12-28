@@ -86,7 +86,7 @@ const userSlice = createSlice({
             })
             .addCase(fetchUsers.fulfilled, (state, action) => {
                 state.loading = false
-                state.users = action.payload?.data || []
+                state.users = action.payload?.message || []
             })
             .addCase(fetchUsers.rejected, (state, action) => {
                 state.loading = false
