@@ -11,24 +11,21 @@ dotenv.config()
 const app = express()
 
 app.use(express.json())
-app.use(cors())
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true
+}))
 
-app.use(
-  '/api/notification',
-  createProxyMiddleware({
-    target: 'http://localhost:5005',
-    changeOrigin: true,
-  })
-)
-app.use('/api/notification', notificationRouter)
+
+app.use('/', notificationRouter)
 
 
 const startServer = async () => {
-    await connectDB()
-    await notificationConsumer()
-    app.listen(5005, () => {
-        console.log('server running on port 5005');
-    })
+  await connectDB()
+  await notificationConsumer()
+  app.listen(5005, () => {
+    console.log('server running on port 5005');
+  })
 }
 
 startServer()

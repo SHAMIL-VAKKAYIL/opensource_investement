@@ -14,6 +14,7 @@ class NotificationService {
 
   async getNotficationByUser(id) {
     const notifications = await Notification.find({ userId: id })
+    console.log(notifications);
     return notifications
   }
 

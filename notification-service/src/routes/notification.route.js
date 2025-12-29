@@ -7,6 +7,8 @@ const router = express.Router()
 
 router.get('/v1/user/:id', verifyUser, async (req, res) => {
     const { id } = req.params
+    console.log(id);
+    
     try {
         const notifications = await NotificationService.getNotficationByUser(id)
         return successResponse(res, 200, notifications)
