@@ -4,7 +4,7 @@ import dotenv from 'dotenv'
 import { connectDB } from './config/db.js'
 import { InvestmentCreatedEvent, paymentCreated, returnGenarationEvent, walletCreatedEvent } from './events/consumer.js'
 import walletRouter from './routes/wallet.route.js'
-import { createProxyMiddleware } from 'http-proxy-middleware'
+import { connectKafkaProducer } from './events/connectKafkaProducer.js'
 // import cookieParser from 'cookie-parser'
 
 
@@ -19,10 +19,10 @@ app.use(cors({
     credentials: true
 }))
 
-app.use((req, _res, next) => {
-    console.log('WALLET SERVICE RECEIVED:', req.method, req.originalUrl)
-    next()
-})
+// app.use((req, _res, next) => {
+//     console.log('WALLET SERVICE RECEIVED:', req.method, req.originalUrl)
+//     next()
+// })
 
 
 app.use('/', walletRouter)
@@ -30,6 +30,7 @@ app.use('/', walletRouter)
 
 const startServer = async () => {
     await connectDB()
+    await connectKafkaProducer() 
     await walletCreatedEvent()
     await InvestmentCreatedEvent()
     await returnGenarationEvent()

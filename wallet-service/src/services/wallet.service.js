@@ -95,7 +95,7 @@ class WalletService {
         try {
 
             const { userId, amount } = data
-            const { data: userData } = await axios.get(`http://localhost:5001/api/user/v1/user/${userId}`)
+            const { data: userData } = await axios.get(`http://localhost:5001/v1/user/${userId}`)
 
             const walletData = await Wallet.findOne({ userId }).session(session)
 
@@ -116,7 +116,7 @@ class WalletService {
                 userId,
                 amount,
                 status: "success",
-                bankDetails: userData.data.bankDetails
+                bankDetails: userData.message.bankDetails
             }], { session })
 
 
@@ -147,12 +147,18 @@ class WalletService {
 
     async getTransactions(userId) {
         const transactions = await Transaction.find({ userId })
+        
+        console.log(transactions);
+        
         if (!transactions) throw new Error('transactions not found');
         return transactions
     }
     
     async getWallet(userId){
+        
         const wallet =await Wallet.findOne({userId})
+        console.log();
+        
              if (!wallet) throw new Error('wallet not found');
         return wallet
     }

@@ -40,6 +40,7 @@ router.get('/v1/withdraw', verifyUser, async (req, res) => {
 
 router.get('/v1/getTransaction', verifyUser, async (req, res) => {
     const userId = req.userId
+console.log(userId);
 
     try {
         const transactions = await WalletService.getTransactions(userId)
@@ -53,6 +54,8 @@ router.get('/v1/getTransaction', verifyUser, async (req, res) => {
 
 router.get('/v1/getWallet', verifyUser, async (req, res) => {
     const userId = req.userId
+    console.log(userId,'dfgdrgd');
+    
 
     try {
         const wallet = await WalletService.getWallet(userId)
