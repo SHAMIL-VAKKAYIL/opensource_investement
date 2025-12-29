@@ -13,6 +13,7 @@ import Notification from './pages/user/Notification'
 import type { RootState } from './store/store'
 import { useSelector } from 'react-redux'
 import AdminHome from './pages/admin/AdminHome'
+import Home from './pages/user/Home'
 
 
 function App() {
@@ -22,10 +23,10 @@ function App() {
   const router = createBrowserRouter([
     {
       path: '/admin/*',
-      element: authUser.role === 'admin' ? <AdminLayout /> : <Navigate to="/login" />,
+      // element: authUser.role === 'admin' ? <AdminLayout /> : <Navigate to="/login" />,
       children: [
         {
-          index:true,
+          index: true,
           element: <AdminHome />
         }
       ]
@@ -55,6 +56,10 @@ function App() {
         {
           path: 'profile',
           element: <Profile />
+        },
+        {
+          index: true,
+          element: <Home />
         }
       ]
 
